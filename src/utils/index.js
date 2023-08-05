@@ -1,0 +1,1 @@
+export { GetUSPopulationData } from './request';
