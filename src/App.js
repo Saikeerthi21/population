@@ -10,15 +10,19 @@ function App() {
   const [appInfo, setAppInfo] = useState([]);
   const [status, setStatus] = useState(true);
   const [filter, setFilter] = useState('');
+  const [year, setyear] = useState('');
 
   useEffect(() => {
-    async function fetchData() {
-      const populationData = await GetUSPopulationData();
-      setAppInfo(populationData);
-      setStatus(false);
-    }
-    fetchData();
+    fetchData(year);
   }, []);
+
+  async function fetchData(year) {
+    console.log(year)
+    const populationData = await GetUSPopulationData(year);
+    setAppInfo(populationData);
+    setStatus(false);
+  }
+
 
   const filteredStates = appInfo.filter((state) =>
     state.State.toLowerCase().startsWith(filter.toLowerCase())
@@ -29,12 +33,27 @@ function App() {
       ? [...appInfo].sort((a, b) => b.Population - a.Population)
       : filteredStates.sort((a, b) => (a.State > b.State ? -1 : 1));
 
+  const changeyear = (year) => {
+    setyear(year)
+  }
+
   return (
     <div className="App">
-      <Header/>
+      <Header />
       <Status loading={status} />
       <Filter value={filter} onChange={setFilter} />
+      <input
+        type="text"
+        placeholder="year"
+        value={year}
+        onChange={(e) => changeyear(e.target.value)}
+      />
+      <button
+        title='Button'
+        onClick={()=>fetchData(year)}>Button</button>
       <List states={sortedStates} />
+
+
     </div>
   );
 }
